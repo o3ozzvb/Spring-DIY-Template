@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -18,12 +19,31 @@ import java.util.Map;
  */
 @WebServlet("/")
 public class DispatcherServlet extends HttpServlet {
+
+    private final Map<String, Controller> handlerMap = new HashMap<>();
+
+    @Override
+    public void init() {
+        handlerMap.put("GET /lectures", (req, resp) -> resp.getWriter().write("강의 목록 조회"));
+        handlerMap.put("POST /lectures", (req, resp) -> resp.getWriter().write("강의 등록"));
+        handlerMap.put("PUT /lectures", (req, resp) -> resp.getWriter().write("강의 수정"));
+        handlerMap.put("DELETE /lectures", (req, resp) -> resp.getWriter().write("강의 삭제"));
+    }
+
     @Override
     protected void service(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
-        final Map<String, ?> params = parseParams(req);
+        // 한글 인코딩
+        resp.setCharacterEncoding("UTF-8");
+        resp.setContentType("application/json; charset=UTF-8");
 
-        // 강의 등록 로직
-        // 강의 목록 로직
+        String key = req.getMethod() + " " + req.getRequestURI();
+        Controller controller = handlerMap.get(key);
+
+        try {
+            controller.handleRequest(req, resp);
+        } catch (Exception e) {
+            throw new ServletException(e);
+        }
     }
 
     private Map<String, ?> parseParams(final HttpServletRequest req) throws IOException {
@@ -31,7 +51,8 @@ public class DispatcherServlet extends HttpServlet {
             final byte[] bodyBytes = req.getInputStream().readAllBytes();
             final String body = new String(bodyBytes, StandardCharsets.UTF_8);
 
-            return new ObjectMapper().readValue(body, new TypeReference<Map<String, Object>>() {});
+            return new ObjectMapper().readValue(body, new TypeReference<Map<String, Object>>() {
+            });
         } else {
             return req.getParameterMap();
         }
