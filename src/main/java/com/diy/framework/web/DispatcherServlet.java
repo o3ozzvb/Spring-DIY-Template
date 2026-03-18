@@ -3,6 +3,7 @@ package com.diy.framework.web;
 import com.diy.app.Lecture;
 import com.diy.app.LectureController;
 import com.diy.app.LectureRepository;
+import com.diy.framework.web.mvc.ModelAndView;
 import com.diy.framework.web.mvc.controller.Controller;
 import com.diy.framework.web.mvc.view.JspViewResolver;
 import com.diy.framework.web.mvc.view.ViewResolver;
@@ -27,15 +28,15 @@ import java.util.Map;
 public class DispatcherServlet extends HttpServlet {
 
     private final Map<String, Controller> handlerMap = new HashMap<>();
+    private final ViewResolver viewResolver = new JspViewResolver();
 
     @Override
     public void init() {
-        JspViewResolver jspViewResolver = new JspViewResolver();
         LectureRepository lectureRepository = new LectureRepository();
         lectureRepository.save(new Lecture(1L, "이것이 자바다"));
         lectureRepository.save(new Lecture(2L, "스프링 만들기"));
 
-        Controller lectureController = new LectureController(lectureRepository, jspViewResolver);
+        Controller lectureController = new LectureController(lectureRepository);
         handlerMap.put("GET /lectures", lectureController);
         handlerMap.put("POST /lectures", lectureController);
         handlerMap.put("PUT /lectures", lectureController);
@@ -63,8 +64,14 @@ public class DispatcherServlet extends HttpServlet {
             return;
         }
 
+        /**
+         * 렌더링의 역할을 Servlet 에게 처리하도록 Controller 로 부터 분리
+         */
         try {
-            controller.handleRequest(req, resp);
+            ModelAndView modelAndView = controller.handleRequest(req, resp);
+            if (modelAndView != null) {
+                viewResolver.resolveViewName(modelAndView.getViewName()).render(req, resp, modelAndView.getModel());
+            }
         } catch (Exception e) {
             throw new ServletException(e);
         }
