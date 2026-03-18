@@ -42,10 +42,12 @@ public class DispatcherServlet extends HttpServlet {
     @Override
     protected void service(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
         // 한글 인코딩
+        req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
         resp.setContentType("application/json; charset=UTF-8");
 
         String key = req.getMethod() + " " + req.getRequestURI();
+        System.out.println("[DispatcherServlet] key = " + key);
         Controller controller = handlerMap.get(key);
 
         try {
