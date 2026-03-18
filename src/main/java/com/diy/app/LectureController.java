@@ -2,6 +2,7 @@ package com.diy.app;
 
 import com.diy.framework.web.mvc.controller.Controller;
 import com.diy.framework.web.mvc.view.JspView;
+import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -31,8 +32,10 @@ public class LectureController implements Controller {
         new JspView("lecture-list.jsp").render(request, response);
     }
 
-    private void handlePost(HttpServletRequest request, HttpServletResponse response) {
-
+    private void handlePost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String title = request.getParameter("title");
+        lectureRepository.save(new Lecture(lectureRepository.nextId(), title));
+        response.sendRedirect("/lectures");
     }
 
     private void handlePut(HttpServletRequest request, HttpServletResponse response) {
