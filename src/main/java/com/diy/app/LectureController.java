@@ -56,7 +56,9 @@ public class LectureController implements Controller {
         response.sendRedirect("/lectures");
     }
 
-    private void handleDelete(HttpServletRequest request, HttpServletResponse response) {
-
+    private void handleDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Long id = Long.valueOf(request.getParameter("id"));
+        lectureRepository.delete(id);
+        response.sendRedirect("/lectures");
     }
 }

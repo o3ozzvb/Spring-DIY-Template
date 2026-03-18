@@ -23,4 +23,8 @@ public class LectureRepository {
     public Lecture findById(Long id) {
         return lectures.get(id);
     }
+
+    public void delete(Long id) {
+        lectures.remove(id);
+    }
 }

@@ -12,6 +12,11 @@
     <c:forEach var="lecture" items="${lectures}">
         <li>${lecture.id} - ${lecture.title}
             <a href="/lectures/edit?id=${lecture.id}">수정</a>
+            <form method="post" action="/lectures" style="display:inline">
+                <input type="hidden" name="_method" value="DELETE">
+                <input type="hidden" name="id" value="${lecture.id}">
+                <button type="submit">삭제</button>
+            </form>
         </li>
     </c:forEach>
 </ul>
