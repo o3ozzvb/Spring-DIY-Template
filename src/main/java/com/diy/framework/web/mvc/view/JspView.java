@@ -1,6 +1,7 @@
 package com.diy.framework.web.mvc.view;
 
-import javax.servlet.RequestDispatcher;
+import com.diy.framework.web.mvc.Model;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,8 +14,8 @@ public class JspView implements View {
         this.viewName = viewName;
     }
 
-    public void render(final HttpServletRequest req, final HttpServletResponse res) throws ServletException, IOException {
-        final RequestDispatcher requestDispatcher = req.getRequestDispatcher("/" + viewName);
-        requestDispatcher.forward(req, res);
+    public void render(final HttpServletRequest req, final HttpServletResponse res, Model model) throws ServletException, IOException {
+        model.getAttributes().forEach(req::setAttribute);
+        req.getRequestDispatcher("/" + viewName).forward(req, res);
     }
 }

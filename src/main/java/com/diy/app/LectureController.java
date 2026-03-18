@@ -1,8 +1,8 @@
 package com.diy.app;
 
+import com.diy.framework.web.mvc.Model;
 import com.diy.framework.web.mvc.controller.Controller;
 import com.diy.framework.web.mvc.view.JspView;
-import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -33,11 +33,11 @@ public class LectureController implements Controller {
     private void handleGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (request.getRequestURI().contains("/edit")) {
             Long id = Long.valueOf(request.getParameter("id"));
-            request.setAttribute("lecture", lectureRepository.findById(id));
-            new JspView("lecture-edit.jsp").render(request, response);
+            Model model = new Model().addAttribute("lectures", lectureRepository.findById(id));
+            new JspView("lecture-edit.jsp").render(request, response, model);
         } else {
-            request.setAttribute("lectures", lectureRepository.values());
-            new JspView("lecture-list.jsp").render(request, response);
+            Model model = new Model().addAttribute("lectures", lectureRepository.values());
+            new JspView("lecture-list.jsp").render(request, response, model);
         }
     }
 
