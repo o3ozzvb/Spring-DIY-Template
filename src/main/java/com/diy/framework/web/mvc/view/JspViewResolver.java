@@ -11,6 +11,9 @@ public class JspViewResolver implements ViewResolver {
 
     @Override
     public View resolveViewName(String viewName) {
+        if (viewName.startsWith("redirect:")) {
+            return new RedirectView(viewName.substring("redirect:".length()));
+        }
         return new JspView(prefix + viewName + suffix);
     }
 }

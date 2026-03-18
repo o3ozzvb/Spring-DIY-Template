@@ -27,7 +27,7 @@ public class LectureController implements Controller {
             case "POST" -> handlePost(request, response);
             case "PUT" -> handlePut(request, response);
             case "DELETE" -> handleDelete(request, response);
-            default -> null;
+            default -> throw new IllegalStateException("Unexpected value: " + method);
         };
     }
 
@@ -45,8 +45,7 @@ public class LectureController implements Controller {
     private ModelAndView handlePost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String title = request.getParameter("title");
         lectureRepository.save(new Lecture(lectureRepository.nextId(), title));
-        response.sendRedirect("/lectures");
-        return null;
+        return new ModelAndView("redirect:/lectures", new Model());
     }
 
     private ModelAndView handlePut(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -55,14 +54,12 @@ public class LectureController implements Controller {
         Lecture lecture = lectureRepository.findById(id);
         lecture.setTitle(title);
         lectureRepository.save(lecture);
-        response.sendRedirect("/lectures");
-        return null;
+        return new ModelAndView("redirect:/lectures", new Model());
     }
 
     private ModelAndView handleDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Long id = Long.valueOf(request.getParameter("id"));
         lectureRepository.delete(id);
-        response.sendRedirect("/lectures");
-        return null;
+        return new ModelAndView("redirect:/lectures", new Model());
     }
 }
