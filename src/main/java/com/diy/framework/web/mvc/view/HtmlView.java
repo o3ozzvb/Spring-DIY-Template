@@ -10,7 +10,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 
-public class HtmlView {
+public class HtmlView implements View {
     private final String viewName;
 
     public HtmlView(final String viewName) {

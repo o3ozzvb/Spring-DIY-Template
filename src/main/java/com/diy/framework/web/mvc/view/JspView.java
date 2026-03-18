@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class JspView {
+public class JspView implements View {
     private final String viewName;
 
     public JspView(final String viewName) {
