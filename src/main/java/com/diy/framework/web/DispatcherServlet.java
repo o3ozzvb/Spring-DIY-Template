@@ -47,8 +47,12 @@ public class DispatcherServlet extends HttpServlet {
         resp.setContentType("application/json; charset=UTF-8");
 
         String key = req.getMethod() + " " + req.getRequestURI();
-        System.out.println("[DispatcherServlet] key = " + key);
         Controller controller = handlerMap.get(key);
+
+        if (controller == null) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
 
         try {
             controller.handleRequest(req, resp);
