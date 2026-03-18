@@ -10,7 +10,9 @@
 <a href="/lecture-registration.jsp">등록</a>
 <ul>
     <c:forEach var="lecture" items="${lectures}">
-        <li>${lecture.id} - ${lecture.title}</li>
+        <li>${lecture.id} - ${lecture.title}
+            <a href="/lectures/edit?id=${lecture.id}">수정</a>
+        </li>
     </c:forEach>
 </ul>
 </body>

@@ -37,6 +37,7 @@ public class DispatcherServlet extends HttpServlet {
         handlerMap.put("POST /lectures", lectureController);
         handlerMap.put("PUT /lectures", lectureController);
         handlerMap.put("DELETE /lectures", lectureController);
+        handlerMap.put("GET /lectures/edit", lectureController);
     }
 
     @Override
@@ -46,7 +47,12 @@ public class DispatcherServlet extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
         resp.setContentType("application/json; charset=UTF-8");
 
-        String key = req.getMethod() + " " + req.getRequestURI();
+        String method = req.getMethod();
+        if ("POST".equals(method)) {
+            String override = req.getParameter("_method");
+            if (override != null) method = override.toUpperCase();
+        }
+        String key = method + " " + req.getRequestURI();
         Controller controller = handlerMap.get(key);
 
         if (controller == null) {

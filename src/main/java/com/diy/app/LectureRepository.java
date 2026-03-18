@@ -19,4 +19,8 @@ public class LectureRepository {
     public Long nextId() {
         return lectures.isEmpty() ? 1L : Collections.max(lectures.keySet()) + 1;
     }
+
+    public Lecture findById(Long id) {
+        return lectures.get(id);
+    }
 }

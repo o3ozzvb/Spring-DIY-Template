@@ -14,7 +14,7 @@ public class JspView {
     }
 
     public void render(final HttpServletRequest req, final HttpServletResponse res) throws ServletException, IOException {
-        final RequestDispatcher requestDispatcher = req.getRequestDispatcher(viewName);
+        final RequestDispatcher requestDispatcher = req.getRequestDispatcher("/" + viewName);
         requestDispatcher.forward(req, res);
     }
 }
