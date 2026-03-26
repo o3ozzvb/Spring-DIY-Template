@@ -21,7 +21,7 @@ public class ReflectionTest {
     }
 
     @Test
-    void testMethodRun() throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    void testMethodRun() throws Exception {
         Class<Car> carClass = Car.class;
         Car car = carClass.getDeclaredConstructor(String.class, int.class).newInstance("Lia's Car", 5000);
 
@@ -35,8 +35,16 @@ public class ReflectionTest {
     }
 
     @Test
-    void testAnnotationMethodRun() {
+    void testAnnotationMethodRun() throws Exception {
+        Class<Car> carClass = Car.class;
+        Car car = carClass.getDeclaredConstructor(String.class, int.class).newInstance("Lia's Car", 5000);
 
+        Method[] declaredMethods = carClass.getDeclaredMethods();
+        for (Method method: declaredMethods) {
+            if (method.isAnnotationPresent(PrintView.class)) {
+                method.invoke(car);
+            }
+        }
     }
 
 }
