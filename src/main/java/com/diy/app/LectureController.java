@@ -11,12 +11,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Component
 public class LectureController implements Controller {
-    private final LectureRepository lectureRepository;
+    private final LectureService lectureService;
 
     @Autowired
-    public LectureController(LectureRepository lectureRepository) {
-        this.lectureRepository = lectureRepository;
+    public LectureController(LectureService lectureService) {
+        this.lectureService = lectureService;
     }
 
     @Override
@@ -37,32 +38,32 @@ public class LectureController implements Controller {
     private ModelAndView handleGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (request.getRequestURI().contains("/edit")) {
             Long id = Long.valueOf(request.getParameter("id"));
-            Model model = new Model().addAttribute("lectures", lectureRepository.findById(id));
+            Model model = new Model().addAttribute("lectures", lectureService.getLecture(id));
             return new ModelAndView("lecture-edit", model);
         } else {
-            Model model = new Model().addAttribute("lectures", lectureRepository.values());
+            Model model = new Model().addAttribute("lectures", lectureService.getLectures());
             return new ModelAndView("lecture-list", model);
         }
     }
 
     private ModelAndView handlePost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String title = request.getParameter("title");
-        lectureRepository.save(new Lecture(lectureRepository.nextId(), title));
+        lectureService.saveLecture(title);
         return new ModelAndView("redirect:/lectures", new Model());
     }
 
     private ModelAndView handlePut(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Long id = Long.valueOf(request.getParameter("id"));
         String title = request.getParameter("title");
-        Lecture lecture = lectureRepository.findById(id);
+        Lecture lecture = lectureService.getLecture(id);
         lecture.setTitle(title);
-        lectureRepository.save(lecture);
+        lectureService.updateLecture(lecture);
         return new ModelAndView("redirect:/lectures", new Model());
     }
 
     private ModelAndView handleDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Long id = Long.valueOf(request.getParameter("id"));
-        lectureRepository.delete(id);
+        lectureService.deleteLecture(id);
         return new ModelAndView("redirect:/lectures", new Model());
     }
 }

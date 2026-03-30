@@ -2,17 +2,14 @@ package com.diy.app;
 
 import com.diy.framework.context.Component;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class LectureRepository {
     private final Map<Long, Lecture> lectures = new HashMap<>();
 
-    public Collection<Lecture> values() {
-        return lectures.values();
+    public List<Lecture> values() {
+        return new ArrayList<>(lectures.values());
     }
 
     public void save(Lecture lecture) {
