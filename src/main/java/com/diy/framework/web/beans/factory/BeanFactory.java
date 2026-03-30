@@ -2,6 +2,7 @@ package com.diy.framework.web.beans.factory;
 
 import com.diy.framework.context.Autowired;
 import com.diy.framework.context.Component;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
@@ -24,13 +25,7 @@ public class BeanFactory {
     }
 
     private Object createBean(Class<?> beanClass) throws Exception {
-        Constructor<?> constructor = null;
-        for (Constructor<?> c : beanClass.getDeclaredConstructors()) {
-            if (c.isAnnotationPresent(Autowired.class)) {
-                constructor = c;
-                break;
-            }
-        }
+        Constructor<?> constructor = getConstructor(beanClass);
 
         // 없으면 기본 생성자
         if (constructor == null) {
@@ -46,6 +41,18 @@ public class BeanFactory {
         Object bean = constructor.newInstance(args);
         beans.put(beanClass, bean);
         return bean;
+    }
+
+    @Nullable
+    private static Constructor<?> getConstructor(Class<?> beanClass) {
+        Constructor<?> constructor = null;
+        for (Constructor<?> c : beanClass.getDeclaredConstructors()) {
+            if (c.isAnnotationPresent(Autowired.class)) {
+                constructor = c;
+                break;
+            }
+        }
+        return constructor;
     }
 
     private Object findOrCreateBean(Class<?> type) throws Exception {
