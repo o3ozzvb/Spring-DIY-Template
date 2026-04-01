@@ -38,7 +38,7 @@ public class LectureController implements Controller {
     private ModelAndView handleGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (request.getRequestURI().contains("/edit")) {
             Long id = Long.valueOf(request.getParameter("id"));
-            Model model = new Model().addAttribute("lectures", lectureService.getLecture(id));
+            Model model = new Model().addAttribute("lecture", lectureService.getLecture(id));
             return new ModelAndView("lecture-edit", model);
         } else {
             Model model = new Model().addAttribute("lectures", lectureService.getLectures());
