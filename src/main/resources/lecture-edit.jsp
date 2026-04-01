@@ -8,6 +8,7 @@
     <style>body { font-family: sans-serif; }</style>
 </head>
 <body>
+<h1>강의 수정</h1>
     <form method="post" action="/lectures">
         <input type="hidden" name="_method" value="PUT">
         <input type="hidden" name="id" value="${lecture.id}">
