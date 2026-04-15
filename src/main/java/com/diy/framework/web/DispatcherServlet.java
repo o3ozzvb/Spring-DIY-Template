@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Method;
+import java.util.Map;
 
 /**
  * Front Controller 역할
@@ -48,20 +50,26 @@ public class DispatcherServlet extends HttpServlet {
     }
 
     private void execute(Object handler, HttpServletRequest req, HttpServletResponse resp) throws ServletException, UnsupportedEncodingException {
-        if (handler instanceof Controller) {
+        try {
             // 한글 인코딩
             req.setCharacterEncoding("UTF-8");
             resp.setCharacterEncoding("UTF-8");
             resp.setContentType("application/json; charset=UTF-8");
 
-            try {
-                ModelAndView modelAndView = ((Controller) handler).handleRequest(req, resp);
-                if (modelAndView != null) {
+            if (handler instanceof Map<?, ?> handlerMap) {
+                Map.Entry<Object, Method> entry = ((Map<Object, Method>) handlerMap).entrySet().iterator().next();
+
+                Object controller = entry.getKey();
+                Method method = entry.getValue();
+
+                // Reflection 으로 메서드 실행
+                Object result = method.invoke(controller, req, resp);
+                if (result instanceof ModelAndView modelAndView) {
                     viewResolver.resolveViewName(modelAndView.getViewName()).render(req, resp, modelAndView.getModel());
                 }
-            } catch (Exception e) {
-                throw new ServletException(e);
             }
+        } catch (Exception e) {
+            throw new ServletException(e);
         }
     }
 }
