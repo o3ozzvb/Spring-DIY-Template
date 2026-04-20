@@ -39,10 +39,10 @@ public class LectureController implements Controller {
         if (request.getRequestURI().contains("/edit")) {
             Long id = Long.valueOf(request.getParameter("id"));
             Model model = new Model().addAttribute("lecture", lectureService.getLecture(id));
-            return new ModelAndView("lecture-edit", model);
+            return new ModelAndView("v1/lecture-edit", model);
         } else {
             Model model = new Model().addAttribute("lectures", lectureService.getLectures());
-            return new ModelAndView("lecture-list", model);
+            return new ModelAndView("v1/lecture-list", model);
         }
     }
 

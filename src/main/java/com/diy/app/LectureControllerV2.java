@@ -25,21 +25,21 @@ public class LectureControllerV2 {
     @RequestMapping(value = "", methods = RequestMethod.GET)
     public ModelAndView list(HttpServletRequest request, HttpServletResponse response) {
         Model model = new Model().addAttribute("lectures", lectureService.getLectures());
-        return new ModelAndView("lecture-list", model);
+        return new ModelAndView("v2/lecture-list", model);
     }
 
     @RequestMapping(value = "/edit", methods = RequestMethod.GET)
     public ModelAndView edit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Long id = Long.valueOf(request.getParameter("id"));
         Model model = new Model().addAttribute("lecture", lectureService.getLecture(id));
-        return new ModelAndView("lecture-edit", model);
+        return new ModelAndView("v2/lecture-edit", model);
     }
 
     @RequestMapping(value = "", methods = RequestMethod.POST)
     public ModelAndView save(HttpServletRequest request, HttpServletResponse response) {
         String title = request.getParameter("title");
         lectureService.saveLecture(title);
-        return new ModelAndView("redirect:/lectures", new Model());
+        return new ModelAndView("redirect:/v2/lectures", new Model());
     }
 
     @RequestMapping(value = "", methods = RequestMethod.PUT)
@@ -49,13 +49,13 @@ public class LectureControllerV2 {
         Lecture lecture = lectureService.getLecture(id);
         lecture.setTitle(title);
         lectureService.updateLecture(lecture);
-        return new ModelAndView("redirect:/lectures", new Model());
+        return new ModelAndView("redirect:/v2/lectures", new Model());
     }
 
     @RequestMapping(value = "", methods = RequestMethod.DELETE)
     public ModelAndView delete(HttpServletRequest request, HttpServletResponse response) {
         Long id = Long.valueOf(request.getParameter("id"));
         lectureService.deleteLecture(id);
-        return new ModelAndView("redirect:/lectures", new Model());
+        return new ModelAndView("redirect:/v2/lectures", new Model());
     }
 }
